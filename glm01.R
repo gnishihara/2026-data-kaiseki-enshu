@@ -209,10 +209,7 @@ ggplot(irisdf) +
     )
   )
 
-# e^2
-
-irisdf = irisdf |> 
-  mutate(PW2 = (Petal.Width), PL2 = (Petal.Length))
+irisdf = irisdf |> mutate(PW2 = Petal.Width, PL2 = Petal.Length)
 
 fullmodel = glm(PL2 ~ PW2 * Species, data = irisdf, family = Gamma("log"))
 model01   = glm(PL2 ~ PW2 + Species, data = irisdf, family = Gamma("log"))
@@ -263,4 +260,13 @@ ggplot(irisdf2) +
 ggplot(irisdf2) + 
   geom_qq(aes(sample = zansa)) +
   geom_qq_line(aes(sample = zansa))
+
+summary(fullmodel)
+
+
+
+
+
+
+
 
