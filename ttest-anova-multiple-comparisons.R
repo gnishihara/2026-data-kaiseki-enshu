@@ -50,3 +50,15 @@ tgdf =
   as_tibble() |> 
   mutate(dose = factor(dose), supp = factor(supp))
 
+ggplot(tgdf) +
+  geom_point(
+    aes(
+      x = dose,
+      y = len,
+      color = supp
+    ),
+    position = position_dodge(width = 0.3)
+  )
+
+
+
