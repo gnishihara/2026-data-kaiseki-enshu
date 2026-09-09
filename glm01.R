@@ -56,6 +56,7 @@ irisdf2 =
     predict = predict(model05)
   ) 
 
+# 残渣・期待値のプロット
 ggplot(irisdf2) + 
   geom_point(
     aes(
@@ -65,4 +66,21 @@ ggplot(irisdf2) +
     )
   ) +
   geom_hline(yintercept = 0)
+
+# 残渣・期待値のプロット 2 
+ggplot(irisdf2) + 
+  geom_point(
+    aes(
+      x = predict, 
+      y = sqrt(abs(zansa)),
+      color = Species
+    )
+  ) 
+
+# QQプロット（残渣が正規分布に従うかを確認）
+ggplot(irisdf2) + 
+  geom_qq(aes(sample = zansa)) +
+  geom_qq_line(aes(sample = zansa))
+
+
 
