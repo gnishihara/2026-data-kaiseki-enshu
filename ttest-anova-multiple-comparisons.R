@@ -26,6 +26,8 @@ t.test(Petal.Length ~ Species, data = df3)
 # Petal.Length: setosa vs versicolor
 t.test(Petal.Length ~ Species, data = df2)
 
+
+################################################################################
 # 花弁の長さは種によって異なる
 # 一元配置分散分析 (Analysis of Variance; ANOVA)
 # 応答変数 ~ 説明変数 R モデルの構造
@@ -33,10 +35,10 @@ fullmodel = lm(Petal.Length ~ Species, data = irisdf)
 
 ggplot(irisdf) + geom_boxplot(aes(x = Species, y = Petal.Length))
 
-summary(fullmodel)
+summary(fullmodel) # 計数表
 #一元配置分散分析（または線形回帰モデル）の結果、アヤメの種（Species）は花弁の長さに対して極めて有意な主効果を示した (F(2, 147) = 1180, p < 0.001, R^2(adj) = 0.94)。
 
-anova(fullmodel)
+anova(fullmodel) # 分散分析表
 
 # 多重比較
 avg_predictions(fullmodel, by = "Species") 
