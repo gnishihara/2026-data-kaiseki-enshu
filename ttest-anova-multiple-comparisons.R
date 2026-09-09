@@ -5,6 +5,7 @@
 # パッケージの読み込み
 library(tidyverse)
 library(marginaleffects)
+library(emmeans)
 
 irisdf = iris |> as_tibble()
 
@@ -60,5 +61,13 @@ ggplot(tgdf) +
     position = position_dodge(width = 0.3)
   )
 
+fullmodel = lm(len ~ dose + supp + dose:supp, data = tgdf)
+summary(fullmodel) # モデル計数表
+anova(fullmodel) # 分散分析表
 
+# tgdf |> group_by(dose, supp) |> reframe(mean = mean(len))
+avg_predictions(fullmodel, by = c("dose", "supp")) 
+avg_comparisons(fullmodel)
 
+eout = emmeans(fullmodel, specs = ~ supp|dose)
+eout
