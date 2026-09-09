@@ -143,8 +143,8 @@ ggplot(irisdf2) +
 ggplot(irisdf) + 
   geom_point(
     aes(
-      x = Petal.Width,
-      y = Petal.Length,
+      x = Petal.Length,
+      y = Petal.Width,
       color = Species
     )
   )
@@ -166,8 +166,70 @@ AIC(fullmodel, model01, model02, model03)
 irisdf2 = 
   irisdf |> 
   mutate(
-    zansa = statmod::qresiduals(model02),
-    predict = predict(model02)
+    zansa = statmod::qresiduals(model03),
+    predict = predict(model03)
+  )
+
+# 残渣・期待値のプロット
+ggplot(irisdf2) + 
+  geom_point(
+    aes(
+      x = predict, 
+      y = zansa,
+      color = Species
+    )
+  ) +
+  geom_hline(yintercept = 0)
+
+# 残渣・期待値のプロット 2 
+ggplot(irisdf2) + 
+  geom_point(
+    aes(
+      x = predict, 
+      y = sqrt(abs(zansa)),
+      color = Species
+    )
+  ) 
+
+# QQプロット（残渣が正規分布に従うかを確認）
+ggplot(irisdf2) + 
+  geom_qq(aes(sample = zansa)) +
+  geom_qq_line(aes(sample = zansa))
+
+
+
+#########################################
+# Petal.Width 二乗する
+ggplot(irisdf) + 
+  geom_point(
+    aes(
+      x = Petal.Length,
+      y = Petal.Width,
+      color = Species
+    )
+  )
+
+irisdf = irisdf |> 
+  mutate(PW2 = Petal.Width^2)
+
+fullmodel = glm(PW2 ~ Petal.Length * Sepal.Length * Species, data = irisdf, family = Gamma("log"))
+model01 = glm(PW2 ~ Petal.Length + Sepal.Length + Species, data = irisdf, family = Gamma("log"))
+model02 = glm(PW2 ~ Petal.Length * Sepal.Length + Species, data = irisdf, family = Gamma("log"))
+model03 = glm(PW2 ~ (Petal.Length + Sepal.Length) * Species, data = irisdf, family = Gamma("log"))
+
+AIC(fullmodel, model01, model02, model03)
+
+# model02:
+# PW ~ PL + SL + Species + PL:SL
+
+
+# qresiduals: ランダム化残渣
+# glm（正規分布以外の） の残渣に使う残渣
+irisdf2 = 
+  irisdf |> 
+  mutate(
+    zansa = statmod::qresiduals(model03),
+    predict = predict(model03)
   )
 
 # 残渣・期待値のプロット
