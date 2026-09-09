@@ -276,7 +276,32 @@ tmp = predict(fullmodel, newdata = pdata, se.fit = TRUE, type = "link") |>
 pdata = bind_cols(pdata, tmp)
 
 
-
+ggplot() +
+  geom_point(
+    aes(
+      x = Petal.Width,
+      y = Petal.Length,
+      color = Species
+    ),
+    data = irisdf2
+  ) +
+  geom_line(
+    aes(
+      x = Petal.Width,
+      y = exp(fit),
+      color = Species
+    ),
+    data = pdata
+  ) +
+  geom_ribbon(
+    aes(
+      x = Petal.Width,
+      ymin = exp(fit - se.fit),
+      ymax = exp(fit + se.fit),
+      fill = Species
+    ),
+    data = pdata
+  )
 
 
 
