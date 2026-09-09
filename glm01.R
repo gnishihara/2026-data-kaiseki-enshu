@@ -199,7 +199,6 @@ ggplot(irisdf2) +
 
 
 #########################################
-# Petal.Width 二乗する
 ggplot(irisdf) + 
   geom_point(
     aes(
@@ -263,6 +262,18 @@ ggplot(irisdf2) +
 
 summary(fullmodel)
 
+
+# モデルとデータの図
+
+## モデル線を描くための情報を整える
+pdata = irisdf2 |> 
+  group_by(Species) |> 
+  expand(Petal.Width = seq(min(Petal.Width), max(Petal.Width), length = 21)) |> 
+  mutate(PW2 = Petal.Width) |> 
+  ungroup()
+tmp = predict(fullmodel, newdata = pdata, se.fit = TRUE, type = "link") |> 
+  as_tibble()
+pdata = bind_cols(pdata, tmp)
 
 
 
