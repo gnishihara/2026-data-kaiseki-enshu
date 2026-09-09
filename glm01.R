@@ -203,24 +203,24 @@ ggplot(irisdf2) +
 ggplot(irisdf) + 
   geom_point(
     aes(
-      x = Petal.Length,
-      y = Petal.Width,
+      y = (Petal.Length),
+      x = (Petal.Width),
       color = Species
     )
   )
 
+# e^2
+
 irisdf = irisdf |> 
-  mutate(PW2 = Petal.Width^2)
+  mutate(PW2 = (Petal.Width), PL2 = (Petal.Length))
 
-fullmodel = glm(PW2 ~ Petal.Length * Sepal.Length * Species, data = irisdf, family = Gamma("log"))
-model01 = glm(PW2 ~ Petal.Length + Sepal.Length + Species, data = irisdf, family = Gamma("log"))
-model02 = glm(PW2 ~ Petal.Length * Sepal.Length + Species, data = irisdf, family = Gamma("log"))
-model03 = glm(PW2 ~ (Petal.Length + Sepal.Length) * Species, data = irisdf, family = Gamma("log"))
+fullmodel = glm(PL2 ~ PW2 * Species, data = irisdf, family = Gamma("log"))
+model01   = glm(PL2 ~ PW2 + Species, data = irisdf, family = Gamma("log"))
 
-AIC(fullmodel, model01, model02, model03)
+AIC(fullmodel, model01)
 
-# model02:
-# PW ~ PL + SL + Species + PL:SL
+# fullmodel:
+# PL2 ~ PW2 + Species PW2:Species
 
 
 # qresiduals: ランダム化残渣
@@ -228,8 +228,8 @@ AIC(fullmodel, model01, model02, model03)
 irisdf2 = 
   irisdf |> 
   mutate(
-    zansa = statmod::qresiduals(model03),
-    predict = predict(model03)
+    zansa = statmod::qresiduals(fullmodel),
+    predict = predict(fullmodel)
   )
 
 # 残渣・期待値のプロット
@@ -251,7 +251,13 @@ ggplot(irisdf2) +
       y = sqrt(abs(zansa)),
       color = Species
     )
-  ) 
+  )+
+  geom_smooth(
+    aes(
+      x = predict, 
+      y = sqrt(abs(zansa))
+    )
+  )
 
 # QQプロット（残渣が正規分布に従うかを確認）
 ggplot(irisdf2) + 
