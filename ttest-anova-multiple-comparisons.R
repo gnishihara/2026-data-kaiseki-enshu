@@ -25,4 +25,13 @@ t.test(Petal.Length ~ Species, data = df3)
 # Petal.Length: setosa vs versicolor
 t.test(Petal.Length ~ Species, data = df2)
 
+# 花弁の長さは種によって異なる
+# 一元配置分散分析 (Analysis of Variance; ANOVA)
+# 応答変数 ~ 説明変数 R モデルの構造
+fullmodel = lm(Petal.Length ~ Species, data = irisdf)
+
+
+
+
+
 
