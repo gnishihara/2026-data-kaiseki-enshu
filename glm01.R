@@ -318,6 +318,6 @@ ggplot() +
     legend.title = element_blank()
   )
 
-
+summary(fullmodel)
 
 
