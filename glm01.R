@@ -37,6 +37,14 @@ model05 = glm(Petal.Width ~ Petal.Length + Species + Petal.Length:Species, data 
 AIC(model01, model02, model03, model04, model05)
 # model05 の AICが最も低いので選択する
 
+summary(model05) # 計数表
 
+# モデルの診断
+
+ggplot(irisdf) + 
+  geom_point(aes(x = Petal.Length, y = Petal.Width, color = Species)) +
+  geom_smooth(aes(x = Petal.Length, y = Petal.Width, color = Species),
+              method = "glm", formula = y ~ x) 
+  
 
 
