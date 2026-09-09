@@ -70,4 +70,10 @@ avg_predictions(fullmodel, by = c("dose", "supp"))
 avg_comparisons(fullmodel)
 
 eout = emmeans(fullmodel, specs = ~ supp|dose)
-eout
+# emmeans(fullmodel, specs = ~ dose | supp)
+contrast(eout, "pairwise", adj = "holm")
+
+eout2 = emmeans(fullmodel, specs = ~ dose|supp)
+# emmeans(fullmodel, specs = ~ dose | supp)
+contrast(eout2, "pairwise", adj = "holm")
+
