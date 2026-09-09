@@ -296,11 +296,26 @@ ggplot() +
   geom_ribbon(
     aes(
       x = Petal.Width,
-      ymin = exp(fit - se.fit),
-      ymax = exp(fit + se.fit),
+      ymin = exp(fit - 1.96 * se.fit),
+      ymax = exp(fit + 1.96 * se.fit),
       fill = Species
     ),
-    data = pdata
+    data = pdata,
+    alpha = 0.5
+  ) +
+  scale_x_continuous("Petal width (cm)", limits = c(0, 3)) +
+  scale_y_continuous("Petal length (cm)", limits = c(0, 8)) +
+  scale_color_discrete(
+    breaks = c("setosa", "versicolor", "virginica"),
+    labels = c("I. setosa", "I. versicolor", "I. virginica")
+  ) +
+  guides(fill = "none") +
+  theme(
+    legend.background = element_blank(),
+    legend.position = "inside",
+    legend.position.inside = c(0,1),
+    legend.justification = c(0,1),
+    legend.title = element_blank()
   )
 
 
