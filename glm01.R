@@ -44,7 +44,25 @@ summary(model05) # 計数表
 ggplot(irisdf) + 
   geom_point(aes(x = Petal.Length, y = Petal.Width, color = Species)) +
   geom_smooth(aes(x = Petal.Length, y = Petal.Width, color = Species),
+              method = "glm", formula = y ~ x) +
+  geom_smooth(aes(x = Petal.Length, y = Petal.Width),
               method = "glm", formula = y ~ x) 
   
 
+irisdf2 = 
+  irisdf |> 
+  mutate(
+    zansa = residuals(model05),
+    predict = predict(model05)
+  ) 
+
+ggplot(irisdf2) + 
+  geom_point(
+    aes(
+      x = predict, 
+      y = zansa,
+      color = Species
+    )
+  ) +
+  geom_hline(yintercept = 0)
 
