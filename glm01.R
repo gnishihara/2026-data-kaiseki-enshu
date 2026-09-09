@@ -84,3 +84,24 @@ ggplot(irisdf2) +
 
 
 
+###################################
+# 検討するモデル
+# 分布：ガンマ
+# リンク：log
+# 応答変数： Petal.Width
+# 説明変数： Petal.Length, Species
+# モデル： Petal.Width ~ Petal.Length + Species + Petal.Length:Species
+
+# モデル比較： AIC
+
+model01 = glm(Petal.Width ~ 1, data = irisdf, family = Gamma("log")) # ヌルモデル (null model)
+model02 = glm(Petal.Width ~ Species, data = irisdf, family = Gamma("log"))
+model03 = glm(Petal.Width ~ Petal.Length, data = irisdf, family = Gamma("log"))
+model04 = glm(Petal.Width ~ Petal.Length + Species, data = irisdf, family = Gamma("log"))
+model05 = glm(Petal.Width ~ Petal.Length + Species + Petal.Length:Species, data = irisdf, family = Gamma("log"))
+
+# AIC 一番低い値がもっともいいモデル
+AIC(model01, model02, model03, model04, model05)
+# model05 の AICが最も低いので選択する
+
+summary(model05) # 計数表
