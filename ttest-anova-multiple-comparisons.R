@@ -44,4 +44,9 @@ avg_predictions(fullmodel, by = "Species")
 hypotheses(fullmodel,  ~ pairwise, multcomp = "bonferroni")
 # hypotheses(fullmodel,  ~ pairwise, multcomp = "holm")
 
+# 二元配置分散分析
+tgdf = 
+  ToothGrowth |> 
+  as_tibble() |> 
+  mutate(dose = factor(dose), supp = factor(supp))
 
