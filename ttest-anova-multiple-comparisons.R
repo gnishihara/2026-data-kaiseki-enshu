@@ -15,6 +15,14 @@ df1 = irisdf |> filter(str_detect(Species, "set", negate = TRUE))
 df2 = irisdf |> filter(str_detect(Species, "vir", negate = TRUE))
 df3 = irisdf |> filter(str_detect(Species, "ver", negate = TRUE))
 
+# Petal.Length: versicolor vs virginica
+t.test(Petal.Length ~ Species, data = df1)
+# ウェルチのt検定を行った結果、virginica の花弁の長さ (5.55) は、versicolor (4.26) よりも有意に違うことが示された (t(95.57) = -12.60, p < 0.001)。
 
+# Petal.Length: setosa vs virginica
+t.test(Petal.Length ~ Species, data = df3)
+
+# Petal.Length: setosa vs versicolor
+t.test(Petal.Length ~ Species, data = df2)
 
 
