@@ -25,5 +25,18 @@ ggplot(irisdf) +
 # 説明変数： Petal.Length, Species
 # モデル： Petal.Width ~ Petal.Length + Species + Petal.Length:Species
 
+# モデル比較： AIC
+
+model01 = glm(Petal.Width ~ 1, data = irisdf) # ヌルモデル (null model)
+model02 = glm(Petal.Width ~ Species, data = irisdf)
+model03 = glm(Petal.Width ~ Petal.Length, data = irisdf)
+model04 = glm(Petal.Width ~ Petal.Length + Species, data = irisdf)
+model05 = glm(Petal.Width ~ Petal.Length + Species + Petal.Length:Species, data = irisdf)
+
+# AIC 一番低い値がもっともいいモデル
+AIC(model01, model02, model03, model04, model05)
+# model05 の AICが最も低いので選択する
+
+
 
 
