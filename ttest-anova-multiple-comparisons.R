@@ -36,3 +36,12 @@ summary(fullmodel)
 
 #一元配置分散分析（または線形回帰モデル）の結果、アヤメの種（Species）は花弁の長さに対して極めて有意な主効果を示した (F(2, 147) = 1180, p < 0.001, R^2(adj) = 0.94)。
 
+# 多重比較
+
+avg_predictions(fullmodel, by = "Species") 
+
+# ボンフェロニー 
+hypotheses(fullmodel,  ~ pairwise, multcomp = "bonferroni")
+# hypotheses(fullmodel,  ~ pairwise, multcomp = "holm")
+
+
