@@ -276,7 +276,7 @@ galadf = galapagos |> as_tibble()
 galadf3  = 
   galadf |> 
   select(PlantEnd, Area, Elevation, Nearest, StCruz, Adjacent) |> 
-  mutate(Area = sqrt(Area),
+  mutate(Area = log(Area),
          Adjacent = sqrt(Adjacent))
 
 nb05 = MASS::glm.nb(PlantEnd ~ Elevation + Area, data = galadf3)
@@ -299,22 +299,85 @@ plot01 + plot02 + plot03 + plot_layout(ncol = 2)
 pdata = galadf |> 
   expand(
     Elevation = seq(min(Elevation), max(Elevation), length = 11),
-    Area = seq(min(Area), max(Area), length = 11)
+    # Area = seq(min(Area), max(Area), length = 11)
+    Area = exp(seq(log(min(Area)), log(max(Area)), length = 91))
   )
 
-pdata1 = pdata |> mutate(Area = sqrt(Area))
+pdata1 = pdata |> mutate(Area = log(Area))
 
 tmp = predict(nb05, newdata = pdata1, se.fit = TRUE) |> as_tibble()
 
 pdata = bind_cols(pdata, tmp)
 
 ggplot() +
-  geom_point(aes(x = Elevation, y = PlantEnd, color = Area), 
+  geom_point(aes(x = Area, y = PlantEnd, color = Elevation), 
              data = galadf) +
   geom_line(
     aes(
-      x = Elevation, y = exp(fit), color = Area, group = Area
+      x = Area, y = exp(fit), color = Elevation, group = Elevation
+    ),
+    data = pdata
+  ) +
+  scale_x_log10() +
+  scale_color_viridis_c()
+
+summary(nb05)
+
+
+
+
+
+
+################################################################################
+# Elevation と Area だけつかう
+# Adjacent を Area に変える
+# nb06 を nb06 に変える
+
+galadf = galapagos |> as_tibble()
+galadf3  = 
+  galadf |> 
+  select(PlantEnd, Area, Elevation, Nearest, StCruz, Adjacent) |> 
+  mutate(Area = log(Area),
+         Adjacent = sqrt(Adjacent))
+
+nb06 = MASS::glm.nb(PlantEnd ~ Area, data = galadf3)
+summary(nb06)
+
+galadf2 = 
+  galadf3 |> 
+  mutate(zansa = statmod::qresiduals(nb06),
+         fit = predict(nb06))
+
+plot01 = ggplot(galadf2) + geom_point(aes(x = fit, y = sqrt(abs(zansa)))) +
+  geom_smooth(aes(x = fit, y = sqrt(abs(zansa))))
+plot02 = ggplot(galadf2) + geom_qq(aes(sample = zansa)) + geom_qq_line(aes(sample = zansa))
+plot03 = ggplot(galadf2) + 
+  geom_point(aes(x = exp(fit), y = PlantEnd)) + 
+  geom_abline(intercept = 0, slope = 1)
+
+plot01 + plot02 + plot03 + plot_layout(ncol = 2)
+
+pdata = galadf |> 
+  expand(
+    Area = exp(seq(log(min(Area)), log(max(Area)), length = 91))
+  )
+
+pdata1 = pdata |> mutate(Area = log(Area))
+
+tmp = predict(nb06, newdata = pdata1, se.fit = TRUE) |> as_tibble()
+
+pdata = bind_cols(pdata, tmp)
+
+ggplot() +
+  geom_point(aes(x = Area, y = PlantEnd), 
+             data = galadf) +
+  geom_line(
+    aes(
+      x = Area, y = exp(fit),
     ),
     data = pdata
   ) +
   scale_color_viridis_c()
+
+
+
