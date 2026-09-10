@@ -42,8 +42,8 @@ m3 = gam(egg.count ~ te(lon,lat, k = 30),
 draw(m3)
 appraise(m3)
 
-pdata = data_slice(m4, lon = evenly(lon, n = 100), lat = evenly(lat, n = 100))
-tmp = predict(m4, newdata = pdata) |> as_tibble()
+pdata = data_slice(m3, lon = evenly(lon, n = 100), lat = evenly(lat, n = 100))
+tmp = predict(m3, newdata = pdata) |> as_tibble()
 pdata2 = bind_cols(pdata, tmp)
 
 ggplot() + 
