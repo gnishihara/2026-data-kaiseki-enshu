@@ -129,3 +129,46 @@ plot03 = ggplot(galadf2) +
 plot01 + plot02 + plot03 + plot_layout(ncol = 2)
 
 summary(nb02)
+
+# 当てはめたモデルと観測値の図
+
+pdata = galadf |> 
+  expand(
+    Area = seq(min(Area), max(Area), length = 21),
+    Adjacent = seq(min(Adjacent), max(Adjacent), length = 21),
+    Elevation = seq(min(Elevation), max(Elevation), length = 21)
+  )
+
+pdata1 = galadf |> 
+  expand(
+    Area = seq(min(Area), max(Area), length = 21),
+    Adjacent = median(Adjacent),
+    Elevation = median(Elevation)
+  )
+
+pdata2 = galadf |> 
+  expand(
+    Adjacent = seq(min(Adjacent), max(Adjacent), length = 21),
+    Area = median(Area),
+    Elevation = median(Elevation)
+  )
+
+pdata3 = galadf |> 
+  expand(
+    Elevation = seq(min(Elevation), max(Elevation), length = 21),
+    Adjacent = median(Adjacent),
+    Area = median(Area)
+  )
+
+tmp = predict(nb02, newdata = pdata, se.fit = TRUE) |> as_tibble()
+pdata2 = bind_cols(pdata, tmp)
+
+ggplot() + 
+  geom_point(aes(x = Area, y = PlantEnd), data = galadf) + 
+  geom_line(aes(x = Area, y = exp(fit), ))
+
+
+
+
+
+
