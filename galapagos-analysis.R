@@ -385,3 +385,24 @@ ggplot() +
 
 
 
+ggplot() +
+  geom_point(aes(x = Area, y = PlantEnd), 
+             data = galadf) +
+  geom_line(
+    aes(
+      x = Area, y = exp(fit),
+    ),
+    data = pdata
+  ) +
+  geom_ribbon(
+    aes(
+      x = Area, ymin = exp(fit - 1.96 * se.fit), ymax = exp(fit + 1.96 * se.fit)
+    ),
+    data = pdata,
+    alpha = 0.5
+  ) +
+  scale_x_log10() +
+  scale_color_viridis_c()
+
+summary(nb06)
+
