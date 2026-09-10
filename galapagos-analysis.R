@@ -376,7 +376,7 @@ ggplot() +
   ) +
   geom_ribbon(
     aes(
-      x = Area, ymin = exp(fit - 1.96 * Sse.fit), ymax = exp(fit + 1.96 * se.fit)
+      x = Area, ymin = exp(fit - 1.96 * se.fit), ymax = exp(fit + 1.96 * se.fit)
     ),
     data = pdata,
     alpha = 0.5
