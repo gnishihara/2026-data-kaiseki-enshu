@@ -102,8 +102,7 @@ summary(nb03)
 galadf3  = galadf |> select(Plants, Area, Elevation, Adjacent)
 galadf3 = galadf3 |> mutate(logArea = log(Area))
 
-nb04 = MASS::glm.nb(Plants ~ logArea, data = galadf3)
-galadf2 = galadf3 |> 
+lgaladf2 = galadf3 |> 
   mutate(zansa = statmod::qresiduals(nb04), fit = predict(nb04))
 
 plot01 = ggplot(galadf2) + geom_point(aes(x = fit, y = sqrt(abs(zansa)))) +
@@ -131,7 +130,7 @@ plot04 = ggplot() +
   ) +
   scale_x_log10() +
   scale_color_viridis_c()
-plot01 + plot02 + plot03 +plot04 + plot_layout(ncol = 2)
+plot01 + plot02 + plot03 + plot04 + plot_layout(ncol = 2)
 
 summary(nb04)
 
