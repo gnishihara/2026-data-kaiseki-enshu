@@ -197,3 +197,30 @@ nb03 = MASS::glm.nb(PlantEnd ~ Area + Elevation + Nearest + StCruz + Adjacent,
                     data = galadf3)
 summary(nb01) # 変数を変換する前の結果
 summary(nb03) # 変数を変換した後の結果
+
+
+
+galadf2 = 
+  galadf3 |> 
+  mutate(zansa = statmod::qresiduals(nb03),
+         fit = predict(nb03))
+
+plot01 = ggplot(galadf2) + geom_point(aes(x = fit, y = sqrt(abs(zansa)))) +
+  geom_smooth(aes(x = fit, y = sqrt(abs(zansa))))
+plot02 = ggplot(galadf2) + geom_qq(aes(sample = zansa)) + geom_qq_line(aes(sample = zansa))
+plot03 = ggplot(galadf2) + 
+  geom_point(aes(x = exp(fit), y = PlantEnd)) + 
+  geom_abline(intercept = 0, slope = 1)
+
+plot01 + plot02 + plot03 + plot_layout(ncol = 2)
+
+
+summary(nb03)
+
+
+# Elevation と Adjacent だけつかう
+
+nb04 = MASS::glm.nb(PlantEnd ~ Elevation + Adjacent, data = galadf3)
+summary(nb04)
+
+
