@@ -269,7 +269,10 @@ ggplot() +
 
 ################################################################################
 # Elevation と Area だけつかう
+# Adjacent を Area に変える
+# nb04 を nb05 に変える
 
+galadf = galapagos |> as_tibble()
 galadf3  = 
   galadf |> 
   select(PlantEnd, Area, Elevation, Nearest, StCruz, Adjacent) |> 
