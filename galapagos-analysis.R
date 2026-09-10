@@ -361,11 +361,8 @@ pdata = galadf |>
   expand(
     Area = exp(seq(log(min(Area)), log(max(Area)), length = 91))
   )
-
 pdata1 = pdata |> mutate(Area = log(Area))
-
 tmp = predict(nb06, newdata = pdata1, se.fit = TRUE) |> as_tibble()
-
 pdata = bind_cols(pdata, tmp)
 
 ggplot() +
@@ -376,6 +373,13 @@ ggplot() +
       x = Area, y = exp(fit),
     ),
     data = pdata
+  ) +
+  geom_ribbon(
+    aes(
+      x = Area, ymin = exp(fit - 1.96 * Sse.fit), ymax = exp(fit + 1.96 * se.fit)
+    ),
+    data = pdata,
+    alpha = 0.5
   ) +
   scale_color_viridis_c()
 
