@@ -107,3 +107,11 @@ ggplot() +
     pdata
   )
 
+# GAM モデル 3
+# y = b0 + f(age) + f(age)_tree + error # モデル
+g3 = gam(circ ~ s(age, k = 6) + s(age, k = 6, by = Tree) + Tree,
+         data = orangedf, family = Gamma("log"))
+summary(g3)
+appraise(g3)
+
+ 
