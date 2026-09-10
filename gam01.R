@@ -114,4 +114,25 @@ g3 = gam(circ ~ s(age, k = 6) + s(age, k = 6, by = Tree) + Tree,
 summary(g3)
 appraise(g3)
 
+pdata = orangedf |> expand(Tree, age = seq(min(age), max(age), length = 21))
+tmp = predict(g3, newdata = pdata, se.fit = TRUE) |> as_tibble()
+pdata = bind_cols(pdata, tmp)
+
+ggplot() +
+  geom_point(
+    aes(
+      x = age,
+      y = circ,
+      color = Tree
+    ), 
+    data = orangedf
+  ) +
+  geom_line(
+    aes(
+      x = age,
+      y = exp(fit),
+      color = Tree
+    ),
+    pdata
+  )
  
