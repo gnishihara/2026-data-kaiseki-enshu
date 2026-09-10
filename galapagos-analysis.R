@@ -143,6 +143,7 @@ pdata1 = galadf |>
   expand(
     Area = seq(min(Area), max(Area), length = 21),
     Adjacent = median(Adjacent),
+    # Adjacent = seq(min(Adjacent), max(Adjacent), length = 3),
     Elevation = median(Elevation)
   )
 
@@ -181,6 +182,18 @@ plot12 + plot22 + plot32 + plot_layout(ncol = 2)
 
 
 
+summary(nb02)
+
+# 説明変数を変換して解析する
 
 
+galadf3  = 
+  galadf |> 
+  select(PlantEnd, Area, Elevation, Nearest, StCruz, Adjacent) |> 
+  mutate(Area = sqrt(Area),
+         Adjacent = sqrt(Adjacent))
 
+nb03 = MASS::glm.nb(PlantEnd ~ Area + Elevation + Nearest + StCruz + Adjacent, 
+                    data = galadf3)
+summary(nb01) # 変数を変換する前の結果
+summary(nb03) # 変数を変換した後の結果
