@@ -106,3 +106,26 @@ plot03 = ggplot(galadf2) +
   geom_abline(intercept = 0, slope = 1)
 
 plot01 + plot02 + plot03 + plot_layout(ncol = 2)
+
+summary(nb01)
+
+
+# Nearest と StCruz が p > 0.05 だったので外す
+nb02 = MASS::glm.nb(PlantEnd ~ Area + Adjacent + Elevation, 
+                    data = galadf)
+
+galadf2 = 
+  galadf |> 
+  mutate(zansa = statmod::qresiduals(nb02),
+         fit = predict(nb02))
+
+plot01 = ggplot(galadf2) + geom_point(aes(x = fit, y = sqrt(abs(zansa)))) +
+  geom_smooth(aes(x = fit, y = sqrt(abs(zansa))))
+plot02 = ggplot(galadf2) + geom_qq(aes(sample = zansa)) + geom_qq_line(aes(sample = zansa))
+plot03 = ggplot(galadf2) + 
+  geom_point(aes(x = exp(fit), y = PlantEnd)) + 
+  geom_abline(intercept = 0, slope = 1)
+
+plot01 + plot02 + plot03 + plot_layout(ncol = 2)
+
+summary(nb02)
