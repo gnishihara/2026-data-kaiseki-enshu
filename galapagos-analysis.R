@@ -29,8 +29,7 @@ ggplot(galadf) +
     aes(x = Island, y = PlantEnd)
   )
 
-ggplot(galadf) + 
-  geom_point(aes(x = Plants, y = PlantEnd))
+ggplot(galadf) + geom_point(aes(x = Plants, y = PlantEnd))
 
 ggplot(galadf) + geom_col(aes(x = Island, y = Area))
 ggplot(galadf) + geom_col(aes(x = Island, y = Elevation))
@@ -41,5 +40,19 @@ ggplot(galadf) + geom_col(aes(x = Island, y = Adjacent))
 ggplot(galadf) + geom_point(aes(x = Area, y = Adjacent))
 
 
+# 目的：　どの説明変数が固有種の説明につながるのか
+# PlantEnd は離散型のデータなので、離散型の確率分布を使う
+# 離散型分布： Poisson (ポアソン分布), Negative Binomial (負の二項分布)
 
+
+m0 = glm(PlantEnd ~ Area + Adjacent + Elevation + Nearest + StCruz, 
+      data = galadf, family = poisson("log"))
+
+galadf2 = 
+  galadf |> 
+  mutate(zansa = statmod::qresiduals(m0),
+         fit = predict(m0))
+
+ggplot(galadf2) + geom_point(aes(x = fit, y = sqrt(abs(zansa))))
+ggplot(galadf2) + geom_qq(aes(sample = zansa)) + geom_qq_line(aes(sample = zansa))
 
