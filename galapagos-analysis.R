@@ -39,7 +39,8 @@ ggplot(galadf) + geom_col(aes(x = Island, y = Adjacent))
 
 ggplot(galadf) + geom_point(aes(x = Area, y = Adjacent))
 
-
+################################################################################
+# 解析はここから
 # 目的：　どの説明変数が固有種の説明につながるのか
 # PlantEnd は離散型のデータなので、離散型の確率分布を使う
 # 離散型分布： Poisson (ポアソン分布), Negative Binomial (負の二項分布)
