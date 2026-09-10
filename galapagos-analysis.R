@@ -160,12 +160,24 @@ pdata3 = galadf |>
     Area = median(Area)
   )
 
-tmp = predict(nb02, newdata = pdata, se.fit = TRUE) |> as_tibble()
-pdata2 = bind_cols(pdata, tmp)
+tmp1 = predict(nb02, newdata = pdata1, se.fit = TRUE) |> as_tibble()
+tmp2 = predict(nb02, newdata = pdata2, se.fit = TRUE) |> as_tibble()
+tmp3 = predict(nb02, newdata = pdata3, se.fit = TRUE) |> as_tibble()
 
-ggplot() + 
+pdata12 = bind_cols(pdata1, tmp1)
+pdata22 = bind_cols(pdata2, tmp2)
+pdata32 = bind_cols(pdata3, tmp3)
+
+plot12 = ggplot() + 
   geom_point(aes(x = Area, y = PlantEnd), data = galadf) + 
-  geom_line(aes(x = Area, y = exp(fit), ))
+  geom_line(aes(x = Area, y = exp(fit)), data = pdata12)
+plot22 = ggplot() + 
+  geom_point(aes(x = Adjacent, y = PlantEnd), data = galadf) + 
+  geom_line(aes(x = Adjacent, y = exp(fit)), data = pdata22)
+plot32 = ggplot() + 
+  geom_point(aes(x = Elevation, y = PlantEnd), data = galadf) + 
+  geom_line(aes(x = Elevation, y = exp(fit)), data = pdata32)
+plot12 + plot22 + plot32 + plot_layout(ncol = 2)
 
 
 
