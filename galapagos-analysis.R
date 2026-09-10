@@ -58,7 +58,7 @@ galadf2 =
 plot01 = ggplot(galadf2) + geom_point(aes(x = fit, y = sqrt(abs(zansa))))
 plot02 = ggplot(galadf2) + geom_qq(aes(sample = zansa)) + geom_qq_line(aes(sample = zansa))
 plot03 = ggplot(galadf2) + 
-  geom_point(aes(x = fit, y = PlantEnd)) + 
+  geom_point(aes(x = exp(fit), y = PlantEnd)) + 
   geom_abline(intercept = 0, slope = 1)
 
 plot01 + plot02 + plot03 + plot_layout(ncol = 2)
