@@ -12,7 +12,6 @@ library(patchwork)
 
 data(galapagos, package = "GLMsData")
 galadf = galapagos |> as_tibble()
-
 galadf3  = 
   galadf |> 
   select(Plants, Area, Elevation, Nearest, StCruz, Adjacent)
@@ -60,9 +59,6 @@ plot04 = ggplot() +
   scale_color_viridis_c()
 plot01 + plot02 + plot03 +plot04 + plot_layout(ncol = 2)
 summary(nb02)
-
-
-
 
 
 
