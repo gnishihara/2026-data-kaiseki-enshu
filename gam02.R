@@ -23,3 +23,23 @@ ggplot(mackdf) +
       color = egg.dens
     )
   )
+
+
+# m1: isotropic spline (等方性のスプライン)
+m1 = gam(egg.count ~ s(lon, lat, k = 40), data = mackdf, family = poisson("log"))
+draw(m1)
+appraise(m1)
+
+m2 = gam(egg.count ~ s(lon, k = 40) +  s(lat, k = 40), 
+         data = mackdf, family = poisson("log"))
+draw(m2)
+appraise(m2)
+
+# m3: anisotropic spline (異方性のスプライン)
+m3 = gam(egg.count ~ te(lon,lat, k = 40), 
+         data = mackdf, family = poisson("log"),
+         method = "REML")
+draw(m3)
+appraise(m3)
+
+
