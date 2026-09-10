@@ -63,4 +63,46 @@ plot03 = ggplot(galadf2) +
 
 plot01 + plot02 + plot03 + plot_layout(ncol = 2)
 
+summary(m0) # 残渣デビアス (Residual deviance) は 自由度と異なるので、モデルを却下する
 
+
+
+
+m1 = glm(PlantEnd ~ Area + Adjacent + Elevation + StCruz, 
+         data = galadf, family = poisson("log"))
+
+galadf2 = 
+  galadf |> 
+  mutate(zansa = statmod::qresiduals(m1),
+         fit = predict(m1))
+
+plot01 = ggplot(galadf2) + geom_point(aes(x = fit, y = sqrt(abs(zansa))))
+plot02 = ggplot(galadf2) + geom_qq(aes(sample = zansa)) + geom_qq_line(aes(sample = zansa))
+plot03 = ggplot(galadf2) + 
+  geom_point(aes(x = exp(fit), y = PlantEnd)) + 
+  geom_abline(intercept = 0, slope = 1)
+
+plot01 + plot02 + plot03 + plot_layout(ncol = 2)
+
+summary(m1) # 残渣デビアス (Residual deviance) は 自由度と異なるので、モデルを却下する
+# ところが、その他の変数はすべて有意だったので、外す変数がない。
+
+
+# なら、負の二項分布をつかう
+
+nb01 = MASS::glm.nb(PlantEnd ~ Area + Adjacent + Elevation + Nearest + StCruz, 
+                    data = galadf)
+
+galadf2 = 
+  galadf |> 
+  mutate(zansa = statmod::qresiduals(nb01),
+         fit = predict(nb01))
+
+plot01 = ggplot(galadf2) + geom_point(aes(x = fit, y = sqrt(abs(zansa)))) +
+  geom_smooth(aes(x = fit, y = sqrt(abs(zansa))))
+plot02 = ggplot(galadf2) + geom_qq(aes(sample = zansa)) + geom_qq_line(aes(sample = zansa))
+plot03 = ggplot(galadf2) + 
+  geom_point(aes(x = exp(fit), y = PlantEnd)) + 
+  geom_abline(intercept = 0, slope = 1)
+
+plot01 + plot02 + plot03 + plot_layout(ncol = 2)
