@@ -220,7 +220,51 @@ summary(nb03)
 
 # Elevation と Adjacent だけつかう
 
+
+galadf3  = 
+  galadf |> 
+  select(PlantEnd, Area, Elevation, Nearest, StCruz, Adjacent) |> 
+  mutate(Area = sqrt(Area),
+         Adjacent = sqrt(Adjacent))
+
 nb04 = MASS::glm.nb(PlantEnd ~ Elevation + Adjacent, data = galadf3)
 summary(nb04)
+
+galadf2 = 
+  galadf3 |> 
+  mutate(zansa = statmod::qresiduals(nb04),
+         fit = predict(nb04))
+
+plot01 = ggplot(galadf2) + geom_point(aes(x = fit, y = sqrt(abs(zansa)))) +
+  geom_smooth(aes(x = fit, y = sqrt(abs(zansa))))
+plot02 = ggplot(galadf2) + geom_qq(aes(sample = zansa)) + geom_qq_line(aes(sample = zansa))
+plot03 = ggplot(galadf2) + 
+  geom_point(aes(x = exp(fit), y = PlantEnd)) + 
+  geom_abline(intercept = 0, slope = 1)
+
+plot01 + plot02 + plot03 + plot_layout(ncol = 2)
+
+
+pdata = galadf |> 
+  expand(
+    Elevation = seq(min(Elevation), max(Elevation), length = 11),
+    Adjacent = seq(min(Adjacent), max(Adjacent), length = 11)
+    )
+
+pdata1 = pdata |> mutate(Adjacent = sqrt(Adjacent))
+
+tmp = predict(nb04, newdata = pdata1, se.fit = TRUE) |> as_tibble()
+
+pdata = bind_cols(pdata, tmp)
+
+ggplot() +
+  geom_point(aes(x = Elevation, y = PlantEnd), data = galadf) +
+  geom_line(
+    aes(
+      x = Elevation, y = exp(fit), color = Adjacent, group = Adjacent
+    ),
+    data = pdata
+  ) +
+  scale_color_viridis_c()
 
 
