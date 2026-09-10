@@ -55,10 +55,8 @@ ggplot(orangedf) +
   geom_point(
     aes(x = age, y = circ, color = Tree)
   ) +
-  geom_point(
-    aes(x = age, y = exp(predict), color = Tree),
-    size = 5,
-    alpha = 0.5
+  geom_line(
+    aes(x = age, y = exp(predict), color = Tree)
   ) +
   labs(subtitle = "観測値と期待値のプロット") +
   facet_wrap(vars(Tree))
