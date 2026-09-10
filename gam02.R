@@ -44,7 +44,7 @@ appraise(m3)
 
 # m5: anisotropic spline (異方性のスプライン)
 # tweedie 分布
-m4 = gam(egg.count ~ te(lon,lat, k = 30), 
+m4 = gam(egg.count ~ te(lon,lat, k = 40), 
          data = mackdf, family = tw(),
          method = "REML")
 draw(m4)
@@ -56,10 +56,10 @@ tmp = predict(m4, newdata = pdata) |> as_tibble()
 pdata2 = bind_cols(pdata, tmp)
 
 ggplot() + 
-  geom_contour(
+  geom_contour_filled(
     aes(
       x = lon, y = lat, 
-      z = value
+      z = value, 
     ),
     data = pdata2,
     bins = 20
