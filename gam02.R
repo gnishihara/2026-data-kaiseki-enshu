@@ -36,10 +36,41 @@ draw(m2)
 appraise(m2)
 
 # m3: anisotropic spline (異方性のスプライン)
-m3 = gam(egg.count ~ te(lon,lat, k = 40), 
+m3 = gam(egg.count ~ te(lon,lat, k = 30), 
          data = mackdf, family = poisson("log"),
          method = "REML")
 draw(m3)
 appraise(m3)
+
+# m5: anisotropic spline (異方性のスプライン)
+# tweedie 分布
+m4 = gam(egg.count ~ te(lon,lat, k = 30), 
+         data = mackdf, family = tw(),
+         method = "REML")
+draw(m4)
+appraise(m4)
+
+
+pdata = data_slice(m4, lon = evenly(lon, n = 100), lat = evenly(lat, n = 100))
+tmp = predict(m4, newdata = pdata) |> as_tibble()
+pdata2 = bind_cols(pdata, tmp)
+
+ggplot() + 
+  geom_contour(
+    aes(
+      x = lon, y = lat, 
+      z = value
+    ),
+    data = pdata2,
+    bins = 20
+  ) +
+  geom_point(
+    aes(
+      x = lon, y = lat,
+      color = egg.count
+    ),
+    mackdf
+  ) +
+  scale_color_viridis_c()
 
 
