@@ -136,3 +136,39 @@ ggplot() +
     pdata
   )
  
+
+AIC(m1, m2, g1, g2, g3)
+
+
+# GAM モデル 4
+# y = b0 + f(age) + f(age)_tree + error # モデル
+g4 = gam(circ ~ s(age, k = 4) + s(age, k = 4, by = Tree) + Tree,
+         data = orangedf, family = Gamma("log"))
+summary(g4)
+appraise(g4)
+
+pdata = orangedf |> expand(Tree, age = seq(min(age), max(age), length = 21))
+tmp = predict(g4, newdata = pdata, se.fit = TRUE) |> as_tibble()
+pdata = bind_cols(pdata, tmp)
+
+ggplot() +
+  geom_point(
+    aes(
+      x = age,
+      y = circ,
+      color = Tree
+    ), 
+    data = orangedf
+  ) +
+  geom_line(
+    aes(
+      x = age,
+      y = exp(fit),
+      color = Tree
+    ),
+    pdata
+  )
+
+AIC(g3, g4)
+summary(g4)
+
