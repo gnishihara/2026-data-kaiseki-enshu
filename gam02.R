@@ -42,15 +42,6 @@ m3 = gam(egg.count ~ te(lon,lat, k = 30),
 draw(m3)
 appraise(m3)
 
-# m5: anisotropic spline (異方性のスプライン)
-# tweedie 分布
-m4 = gam(egg.count ~ te(lon,lat, k = 40), 
-         data = mackdf, family = tw(),
-         method = "REML")
-draw(m4)
-appraise(m4)
-
-
 pdata = data_slice(m4, lon = evenly(lon, n = 100), lat = evenly(lat, n = 100))
 tmp = predict(m4, newdata = pdata) |> as_tibble()
 pdata2 = bind_cols(pdata, tmp)
@@ -72,5 +63,3 @@ ggplot() +
     mackdf
   ) +
   scale_color_viridis_c()
-
-
