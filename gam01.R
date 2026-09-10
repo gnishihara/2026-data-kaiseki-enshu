@@ -61,8 +61,30 @@ ggplot(orangedf) +
   labs(subtitle = "観測値と期待値のプロット") +
   facet_wrap(vars(Tree))
 
+## GAM
+
+# s() スムーズ関数
+#   k = 10 : ベーシス関数の数　デフォルト
+#   bs = "tp" ：　ベーシスの種類 平滑化スプライン　デフォルト
+
+g1 = gam(circ ~ s(age, k = 6), data = orangedf, family = Gamma("log"))
+summary(g1)
+draw(g1)
+
+# 診断図
+appraise(g1)
+
+# GAM のモデル 2
+# Tree ごとに s()　を当てはめる、Tree ごとに切片を変える
+g2 = gam(circ ~ s(age, k = 6, by = Tree) + Tree, data = orangedf, family = Gamma("log"))
+summary(g2)
+
+draw(g2)
+appraise(g2)
 
 
+# モデルと実測値の図
 
+pdata = orangedf |> expand(Tree, age = seq(min(age), max(age), length = 21))
 
 
