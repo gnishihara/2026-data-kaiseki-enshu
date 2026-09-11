@@ -25,7 +25,6 @@ tanks = tibble(
 tanks
 ggplot(tanks) + geom_point(aes(x = treatment, y = tank_effect), position = position_jitter(width = 0.2))
 
-
 seaweeddf = 
   tanks |> 
   uncount(30) |> 
