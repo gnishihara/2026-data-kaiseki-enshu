@@ -45,3 +45,22 @@ seaweeddf |>
   reframe(total = sum(survival)) |> 
   ggplot() + 
   geom_point(aes(x = treatment, y = total), position = position_jitter(width = 0.1))
+
+## GLM 解析 (ランダム効果を無視した解析・水槽ごとの微妙な違いを無視したときの結果)
+m01 = glm(survival ~ treatment, data = seaweeddf, family = binomial("logit"))
+summary(m01)
+eout = emmeans(m01, ~ treatment, type = "response")
+contrast(eout, "pairwise")
+
+## GLMM 
+g01 = glmer(survival ~ treatment + (1 | tank), 
+            data = seaweeddf,
+            family = binomial("logit"))
+summary(g01)
+eout = emmeans(g01, ~ treatment, type = "response")
+contrast(eout, "pairwise")
+
+
+
+
+
