@@ -53,6 +53,7 @@ eout = emmeans(m01, ~ treatment, type = "response")
 contrast(eout, "pairwise")
 
 ## GLMM 
+## (1 | tank) は、各水槽に対するランダム効果（ランダム切片）
 g01 = glmer(survival ~ treatment + (1 | tank), 
             data = seaweeddf,
             family = binomial("logit"))
@@ -60,7 +61,7 @@ summary(g01)
 eout = emmeans(g01, ~ treatment, type = "response")
 contrast(eout, "pairwise")
 
-
-
-
+# GLM:   survival = treatment + error
+# GLMM:  survival = (treatment + tank_variation) + error
+ 
 
